@@ -36,7 +36,7 @@ qm create "$ID" \
     --scsihw virtio-scsi-pci
 
 echo "attaching the disk..."
-IMPORT=$(qm importdisk "$ID" "$1" "$STORAGE")
+IMPORT=$(qm importdisk "$ID" "$1" "$STORAGE" --format qcow2)
 VOLUME=$(echo "$IMPORT" | sed -n "s/.*imported disk '\([^']*\)'.*/\1/p")
 qm set "$ID" --scsi0 "$VOLUME" 
 qm set "$ID" --boot order=scsi0
