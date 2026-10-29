@@ -1,5 +1,10 @@
 # This is the main file, that declares what terraform should do. Every action is a "resource", with EXACT hook name, and then given name. 
 
+# Okay, so turns out when I clone a template, tf just clones it's MAC as well. And all VMs getting same IP and everything just goes sideways. So when using template, MAC generators is neded
+resource "macaddress" "k8s_lab_mac" { 
+ for_each = var.vms
+}
+
 # First key here is a HOOK NAME. It needs to be EXACT, and is defined by a provider, and needs to be looked up. Here it's "proxmox_virtual_environment_vm", which is a hook for working with VMs, creating and changing them. 
 # For examle, if I need to download file (cloud image), I would need to use "proxmox_virtual_environment_download_file" Second key is just a given name, can be anything
 resource "proxmox_virtual_environment_vm" "k8s_lab" {
@@ -50,6 +55,7 @@ resource "proxmox_virtual_environment_vm" "k8s_lab" {
   network_device {
     bridge = "vmbr1"
     model = "virtio"
+    mac_address = macaddress.k8s_lab_mac[each.key].address 
   }
 
   operating_system { # Also something from the tutorial. It says, that even though it is optional, it is preferred to specify the OS type here, because otherwise proxmox can fallback to the default, older setting that limits stuff

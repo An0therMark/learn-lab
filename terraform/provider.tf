@@ -3,6 +3,10 @@ terraform {
     proxmox = {
         source = "bpg/proxmox"
     }
+    macaddress = {
+      source = "ivoronin/macaddress"
+      version = "0.3.0"
+    }
   }
 }
 
